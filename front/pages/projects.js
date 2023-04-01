@@ -13,7 +13,7 @@ export default function Projects() {
             Parceiros
           </h1>
           <p className="text-lg leading-7 text-pink-500 dark:text-pink-400">
-            Showcase your projects with a hero image (16 x 9)
+            Quem já apoia a na nossa rede
           </p>
         </div>
         <div className="container py-12">
