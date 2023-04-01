@@ -150,7 +150,7 @@ export default function Home({ posts }) {
                       </div>
                       <div>
                         <a href="" onClick={handleLikeClick}>
-                          <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>({numLikes})
+                          <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>+{numLikes}
                         </a>   
                       </div>                   
                     </div>
