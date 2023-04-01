@@ -7,7 +7,7 @@ import { getAllFilesFrontMatter } from '@/lib/mdx'
 import { useState, useEffect } from 'react';
 
 const ContractKit = require('@celo/contractkit');
-const contractAddress = '0x6389b1F4Ea365E62fa88b4648a54E18017a315B9'; 
+const contractAddress = '0x43d7053347b84FdAd337e794F15C6009F03e3Aac'; 
 const SVForumJSON = require('./contracts/SVForum.json'); 
 
 export async function getStaticProps() {
@@ -30,11 +30,13 @@ export default function Home({ posts }) {
     for (let i = 0; i < numPosts; i++) {
       const post = await contract.methods.posts(i).call();
       const postData = {
+        id: post.id,
         title: post.title,
         description: post.description,
         user: post.user,
         numLikes: post.numLikes,
-        timestamp: post.timestamp
+        timestamp: post.timestamp,
+        tags: post.tags.split("-")
       };
       postDataArray.push(postData);
     }
@@ -89,9 +91,9 @@ export default function Home({ posts }) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!postDataArray.length && 'Nenhum post encontrado.'}
           {postDataArray.map((postData) => {
-            const { timestamp,  title, description, user, numLikes} = postData
+            const { id, timestamp,  title, description, user, numLikes, tags} = postData
             return (
-              <li key='1' className="py-12">
+              <li key={id} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                     <dl>
@@ -112,7 +114,9 @@ export default function Home({ posts }) {
                             </Link>
                           </h2>
                           <div className="flex flex-wrap text-purple-600">
-                            <Tag key="tag1" text="tag1"/>
+                            {tags.map((tag) => (
+                              <Tag key={tag} text={tag} />
+                            ))}
                           </div>
                         </div>
                         <div className="prose max-w-none text-pink-500 dark:text-pink-400">
