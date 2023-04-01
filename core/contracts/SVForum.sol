@@ -1,10 +1,12 @@
-//SPDX-License-Identifier: MIT
-pragma solidity ^0.8.1;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
-contract SVForum  is ERC1155 {
-
+/// @custom:security-contact thaynaracsantos@gmail.com
+contract SVForum is ERC20, Ownable, ERC20Permit {
     address public contractOwner;
     uint public numPosts;
 
@@ -32,9 +34,15 @@ contract SVForum  is ERC1155 {
     event NewPost(string title, string description, address user);
     event LikeRegistered(uint postId, address user);
 
-    constructor() ERC1155("https://gateway.pinata.cloud/ipfs/QmTN32qBKYqnyvatqfnU8ra6cYUGNxpYziSddCatEmopLR/metadata/api/item/{id}.json") {
+    constructor() ERC20("SVToken", "SVT") ERC20Permit("SVToken") {
         contractOwner = msg.sender;
-        numPosts = 0;
+        numPosts = 0;    
+
+        _mint(msg.sender, 1000000 * 10 ** decimals());    
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
     }
 
     // Function to create a new post
@@ -46,7 +54,10 @@ contract SVForum  is ERC1155 {
         post.numLikes = 0;
         post.timestamp = block.timestamp;
         numPosts++;
-        emit NewPost(_title, _description, msg.sender);
+
+        _mint(msg.sender, 10); 
+
+        emit NewPost(_title, _description, msg.sender);       
     }
 
     // Function to get all the posts
@@ -72,6 +83,8 @@ contract SVForum  is ERC1155 {
 
         posts[_postId].likes[msg.sender] = true;
         posts[_postId].numLikes++;
+
+        _mint(msg.sender, 10);
 
         emit LikeRegistered(_postId, msg.sender);
     }
