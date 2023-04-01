@@ -1,5 +1,5 @@
 const siteMetadata = {
-  title: 'Next.js',
+  title: 'Para todas as mulheres',
   author: 'Vozes Seguras',
   headerTitle: 'Vozes Seguras',
   description: 'Forum para...',
@@ -10,8 +10,8 @@ const siteMetadata = {
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
+  email: 'vozesseguras@gmail.com',
+  github: 'https://github.com/thaynaracsantos/sv-platform',
   twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
   youtube: 'https://youtube.com',
