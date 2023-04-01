@@ -3,10 +3,12 @@ import { PageSEO } from '@/components/SEO'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { getAllFilesFrontMatter } from '@/lib/mdx'
-import formatDate from '@/lib/utils/formatDate'
 
+import { useState, useEffect } from 'react';
 
-const MAX_DISPLAY = 5
+const ContractKit = require('@celo/contractkit');
+const contractAddress = '0x6389b1F4Ea365E62fa88b4648a54E18017a315B9'; 
+const SVForumJSON = require('./contracts/SVForum.json'); 
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
@@ -15,6 +17,63 @@ export async function getStaticProps() {
 }
 
 export default function Home({ posts }) {
+
+  const [postDataArray, setPostDataArray] = useState([]);
+
+  const getAllPosts = async () => {
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
+    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+  
+    const numPosts = await contract.methods.numPosts().call();
+    const postDataArray = [];
+  
+    for (let i = 0; i < numPosts; i++) {
+      const post = await contract.methods.posts(i).call();
+      const postData = {
+        title: post.title,
+        description: post.description,
+        user: post.user,
+        numLikes: post.numLikes,
+        timestamp: post.timestamp
+      };
+      postDataArray.push(postData);
+    }
+  
+    setPostDataArray(postDataArray);
+    console.log(postDataArray);
+  }
+
+  function formatTime(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      timeZone: 'America/Sao_Paulo' 
+    };
+    const formattedTime = date.toLocaleDateString('pt-BR', options);
+    return formattedTime;
+  }
+
+  const handleLikeClick = async (event) => {
+    event.preventDefault();
+
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
+    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress); 
+
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    const account = accounts[0];
+
+    console.log(account);
+
+    const postId = 0;
+    contract.methods.registerLike(postId).send({ from: account });
+  };
+
+  useEffect(() => {
+    getAllPosts();
+  })
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
@@ -28,17 +87,17 @@ export default function Home({ posts }) {
           </p>
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!posts.length && 'Nenhum post encontrado.'}
-          {posts.slice(0, MAX_DISPLAY).map((frontMatter) => {
-            const { slug, date, title, summary, tags } = frontMatter
+          {!postDataArray.length && 'Nenhum post encontrado.'}
+          {postDataArray.map((postData) => {
+            const { timestamp,  title, description, user, numLikes} = postData
             return (
-              <li key={slug} className="py-12">
+              <li key='1' className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                     <dl>
                       <dt className="sr-only">Publicado Em</dt>
                       <dd className="text-base font-medium leading-6 text-pink-500 dark:text-pink-400">
-                        <time dateTime={date}>{formatDate(date)}</time>
+                        <time dateTime={timestamp}>{formatTime(timestamp)}</time>
                       </dd>
                     </dl>
                     <div className="space-y-5 xl:col-span-3">
@@ -46,31 +105,25 @@ export default function Home({ posts }) {
                         <div>
                           <h2 className="text-2xl font-bold leading-8 tracking-tight">
                             <Link
-                              href={`/blog/${slug}`}
+                              href={`/blog/1`}
                               className="text-pink-900 dark:text-pink-100"
                             >
                               {title}
                             </Link>
                           </h2>
                           <div className="flex flex-wrap text-purple-600">
-                            {tags.map((tag) => (
-                              <Tag key={tag} text={tag} />
-                            ))}
+                            <Tag key="tag1" text="tag1"/>
                           </div>
                         </div>
                         <div className="prose max-w-none text-pink-500 dark:text-pink-400">
-                          {summary}
+                          {description}
                         </div>
                       </div>
-                      <div className="text-base font-medium leading-6">
-                        <Link
-                          href={`/blog/${slug}`}
-                          className="text-purple-600 hover:text-purple-800 dark:hover:text-purple-400"
-                          aria-label={`Read "${title}"`}
-                        >
-                          Saiba mais &rarr;
-                        </Link>
-                      </div>
+                      <div>
+                        <a href="" onClick={handleLikeClick}>
+                          <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>({numLikes})
+                        </a>   
+                      </div>                   
                     </div>
                   </div>
                 </article>
@@ -79,17 +132,6 @@ export default function Home({ posts }) {
           })}
         </ul>
       </div>
-      {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base font-medium leading-6">
-          <Link
-            href="/blog"
-            className="text-purple-500 hover:text-purple-600 dark:hover:text-purple-400"
-            aria-label="Todos os Posts"
-          >
-            Todos os Posts &rarr;
-          </Link>
-        </div>
-      )}
     </>
   )
 }

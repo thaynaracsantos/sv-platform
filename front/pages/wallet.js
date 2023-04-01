@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import abi from './contracts/SVForum.json';
+
+
+const ContractKit = require('@celo/contractkit');
+const contractAddress = '0x6389b1F4Ea365E62fa88b4648a54E18017a315B9'; 
+const SVForumJSON = require('./contracts/SVForum.json'); 
 
 export default function MyComponent() {
     const [isWalletConnected, setIsWalletConnected] = useState(false);
     const [jointOwnerAddress, setJointOwnerAddress] = useState(null); 
+
+    const [isContractOwner, setIsContractOwner] = useState(false);
+    const [contractOwnerAddress, setContractOwnerAddress] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -23,8 +30,25 @@ export default function MyComponent() {
     }
   }
 
+  const getContractOwner = async () => {
+    try {
+        const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
+        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+      
+        const owner = await contract.methods.contractOwner().call();
+        setContractOwnerAddress(owner);
+
+        if (owner.toLowerCase() === jointOwnerAddress.toLowerCase()) {
+            setIsContractOwner(true);
+        }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     checkIfWalletIsConnected();
+    getContractOwner();
   }, [isWalletConnected])
 
   return (
@@ -37,8 +61,11 @@ export default function MyComponent() {
         </div>
         <div className="container py-12">
           <div className="-m-0 flex flex-wrap text-pink-500">
+            {isContractOwner && (
+                <p><span className="font-bold">(Adm)</span></p>
+            )}
             {jointOwnerAddress ? (
-                <p>Conta: {jointOwnerAddress}</p>
+                <p><span className="font-bold">Sua Conta: </span> {jointOwnerAddress}</p>
             ) : (
                 <button onClick={checkIfWalletIsConnected}>Conectar Conta</button>
             )}
