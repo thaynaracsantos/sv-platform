@@ -10,6 +10,10 @@ const ContractKit = require('@celo/contractkit');
 const contractAddress = '0x43d7053347b84FdAd337e794F15C6009F03e3Aac'; 
 const SVForumJSON = require('./contracts/SVForum.json'); 
 
+import Web3Modal from 'web3modal';
+import Web3 from 'web3';
+import { bufferToHex } from 'ethereumjs-util';
+
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
 
@@ -60,16 +64,37 @@ export default function Home({ posts }) {
   const handleLikeClick = async (event) => {
     event.preventDefault();
 
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
-    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress); 
+    const web3Modal = new Web3Modal({
+      network: "celo", // Use the Celo Alfajores testnet
+      cacheProvider: true,
+    });
+    
+    console.log("web3Modal"); 
+    console.log(web3Modal); // Check if the web3Modal object is initialized
+    
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
+    
+    web3Modal.connect()
+      .then((provider) => {
+        console.log("provider"); 
+        console.log(provider); // Print the provider object
 
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    const account = accounts[0];
+        kit.web3.eth.setProvider(provider);
 
-    console.log(account);
+        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);        
 
-    const postId = 0;
-    contract.methods.registerLike(postId).send({ from: account });
+        const account = provider.selectedAddress;
+
+        console.log(account);
+    
+        const postId = 0;
+        contract.methods.registerLike(postId).send({ from: account, gas: 3000000 });
+
+      })
+      .catch((error) => {
+        console.error("error");
+        console.error(error); // Handle any errors
+      }); 
   };
 
   useEffect(() => {
