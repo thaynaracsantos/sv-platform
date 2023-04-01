@@ -260,6 +260,11 @@
 					{
 						"components": [
 							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
 								"internalType": "string",
 								"name": "title",
 								"type": "string"
@@ -278,6 +283,11 @@
 								"internalType": "uint256",
 								"name": "numLikes",
 								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "tags",
+								"type": "string"
 							},
 							{
 								"internalType": "uint256",
@@ -358,6 +368,11 @@
 					{
 						"internalType": "string",
 						"name": "_description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tags",
 						"type": "string"
 					}
 				],
@@ -465,6 +480,11 @@
 				"name": "posts",
 				"outputs": [
 					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
 						"internalType": "string",
 						"name": "title",
 						"type": "string"
@@ -488,6 +508,11 @@
 						"internalType": "uint256",
 						"name": "timestamp",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "tags",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -791,11 +816,11 @@
 			]
 		},
 		"core/contracts/SVForum.sol": {
-			"keccak256": "0x4d2b0a3a86dbf29dbac1be3c316b3c2b65d9c0fdc8be70d6c05a59e34cbe1a6f",
+			"keccak256": "0x27a47c3b89bc2b402366848ae7c3070d620a3583a16366b5299f7ec9526232d9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d3af4922954bf7964d593129b06f3a30a9f9b93528899df8f1a81e04ea5b1217",
-				"dweb:/ipfs/QmTP3EnvqFKuFRWeTxUencdxqU5RrfgGicCKFrzbdbMuAQ"
+				"bzz-raw://3d7cfd52c5b69864ba35f432ae872c55803cbdc7aa9bd46cf0741ec881424126",
+				"dweb:/ipfs/QmUhnQPoG38NXkXxF8tDrNZEU4a8MMtcCUG2EdbZiUaHWn"
 			]
 		}
 	},

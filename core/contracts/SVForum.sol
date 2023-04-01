@@ -11,19 +11,23 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
     uint public numPosts;
 
     struct Post {
+        uint id;
         string title;
         string description;
         address user;
         uint numLikes;
         uint timestamp;
+        string tags;
         mapping(address => bool) likes;
     }
 
     struct PostData {
+        uint id;
         string title;
         string description;
         address user;
         uint numLikes;
+        string tags;
         uint timestamp;
     }
 
@@ -46,13 +50,15 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
     }
 
     // Function to create a new post
-    function newPost(string memory _title, string memory _description) public {        
+    function newPost(string memory _title, string memory _description, string memory tags) public {        
         Post storage post = posts[numPosts];
+        post.id = numPosts;
         post.title = _title;
         post.description = _description;
         post.user = msg.sender;
         post.numLikes = 0;
         post.timestamp = block.timestamp;
+        post.tags = tags;
         numPosts++;
 
         _mint(msg.sender, 10); 
@@ -66,11 +72,13 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         for (uint i = 0; i < numPosts; i++) {
             Post storage post = posts[i];
             PostData memory postData = PostData({
+                id: post.id,
                 title: post.title,
                 description: post.description,
                 user: post.user,
                 numLikes: post.numLikes,
-                timestamp: post.timestamp
+                timestamp: post.timestamp,
+                tags: post.tags
             });
             postDataArray[i] = postData;
         }
