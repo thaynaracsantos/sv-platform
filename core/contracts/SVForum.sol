@@ -38,7 +38,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
     event NewPost(string title, string description, address user);
     event LikeRegistered(uint postId, address user);
 
-    constructor() ERC20("SVToken", "SVT") ERC20Permit("SVToken") {
+    constructor() ERC20("SafeCoin", "SAFE") ERC20Permit("SafeCoin") {
         contractOwner = msg.sender;
         numPosts = 0;    
 
