@@ -285,14 +285,14 @@
 								"type": "uint256"
 							},
 							{
-								"internalType": "string",
-								"name": "tags",
-								"type": "string"
-							},
-							{
 								"internalType": "uint256",
 								"name": "timestamp",
 								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "tags",
+								"type": "string"
 							}
 						],
 						"internalType": "struct SVForum.PostData[]",
@@ -372,7 +372,7 @@
 					},
 					{
 						"internalType": "string",
-						"name": "tags",
+						"name": "_tags",
 						"type": "string"
 					}
 				],
@@ -816,11 +816,11 @@
 			]
 		},
 		"core/contracts/SVForum.sol": {
-			"keccak256": "0x27a47c3b89bc2b402366848ae7c3070d620a3583a16366b5299f7ec9526232d9",
+			"keccak256": "0xae37bee8ff98cff3db51cd643c16ea1ffdae706a0dcab9c5dde418420696cbc5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3d7cfd52c5b69864ba35f432ae872c55803cbdc7aa9bd46cf0741ec881424126",
-				"dweb:/ipfs/QmUhnQPoG38NXkXxF8tDrNZEU4a8MMtcCUG2EdbZiUaHWn"
+				"bzz-raw://ab5fcf85094d4e49469ea91ee6b683520f94589cf9f4b1400db7df7aeca8d017",
+				"dweb:/ipfs/QmdUwogVJMimc2ytfyuw4ivrEfmNH76WJFwpeXKxJXX9SY"
 			]
 		}
 	},

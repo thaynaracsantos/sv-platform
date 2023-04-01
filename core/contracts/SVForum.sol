@@ -27,8 +27,8 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         string description;
         address user;
         uint numLikes;
-        string tags;
         uint timestamp;
+        string tags;
     }
 
     // Mapping of Posts
@@ -50,7 +50,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
     }
 
     // Function to create a new post
-    function newPost(string memory _title, string memory _description, string memory tags) public {        
+    function newPost(string memory _title, string memory _description, string memory _tags) public {        
         Post storage post = posts[numPosts];
         post.id = numPosts;
         post.title = _title;
@@ -58,7 +58,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         post.user = msg.sender;
         post.numLikes = 0;
         post.timestamp = block.timestamp;
-        post.tags = tags;
+        post.tags = _tags;
         numPosts++;
 
         _mint(msg.sender, 10); 
