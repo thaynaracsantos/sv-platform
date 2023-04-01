@@ -87,8 +87,6 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
 
     // Function to register a new like
     function registerLike(uint _postId) public {
-        require(posts[_postId].likes[msg.sender] == false, "You have already liked on this post.");
-
         posts[_postId].likes[msg.sender] = true;
         posts[_postId].numLikes++;
 
