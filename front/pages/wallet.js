@@ -22,7 +22,6 @@ export default function MyComponent() {
         setJointOwnerAddress(account);
         console.log("Account Connected: ", account);
       } else {
-        setError("Please install a MetaMask wallet to use our bank.");
         console.log("No Metamask detected");
       }
     } catch (error) {
