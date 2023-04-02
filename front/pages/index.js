@@ -13,6 +13,7 @@ const SVForumJSON = require('./contracts/SVForum.json');
 import Web3Modal from 'web3modal';
 import Web3 from 'web3';
 import { bufferToHex } from 'ethereumjs-util';
+import ViewComments from '@/components/ViewComments'
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
@@ -152,7 +153,9 @@ export default function Home({ posts }) {
                         <a href="" onClick={() => {handleLikeClick(id);}}>
                           <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>+{numLikes}
                         </a>   
-                      </div>                   
+                      </div>   
+                    <ViewComments />
+
                     </div>
                   </div>
                 </article>
