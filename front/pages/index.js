@@ -61,9 +61,10 @@ export default function Home({ posts }) {
     return formattedTime;
   }
 
-  const handleLikeClick = async (event) => {
+  const handleLikeClick = async (postId) => {
     event.preventDefault();
 
+    console.log(postId);
     const web3Modal = new Web3Modal({
       network: "celo", // Use the Celo Alfajores testnet
       cacheProvider: true,
@@ -85,9 +86,8 @@ export default function Home({ posts }) {
 
         const account = provider.selectedAddress;
 
-        console.log(account);
-    
-        const postId = 0;
+        console.log(account);    
+        
         contract.methods.registerLike(postId).send({ from: account, gas: 3000000 });
 
       })
@@ -149,7 +149,7 @@ export default function Home({ posts }) {
                         </div>
                       </div>
                       <div>
-                        <a href="" onClick={handleLikeClick}>
+                        <a href="" onClick={() => {handleLikeClick(id);}}>
                           <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>+{numLikes}
                         </a>   
                       </div>                   
