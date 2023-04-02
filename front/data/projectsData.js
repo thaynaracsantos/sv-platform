@@ -27,7 +27,7 @@ const projectsData = [
     title: 'WOMEN IN FORCE',
     description: `Projeto NFT liderado por mulheres. Trazendo as mulheres para a Web3. Proteger o meio ambiente. Primeira coleção de 7.236 NFTs exclusivos inspirados na Floresta Amazônica.`,
     imgSrc: '/static/images/womam-force-nft.png',
-    href: 'ttps://womenforce.art/',
+    href: 'https://womenforce.art/',
   },
   {
     title: 'ONG DAS MULHERES DO BRASIL',

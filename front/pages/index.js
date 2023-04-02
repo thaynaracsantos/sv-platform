@@ -40,7 +40,7 @@ export default function Home({ posts }) {
         user: post.user,
         numLikes: post.numLikes,
         timestamp: post.timestamp,
-        tags: post.tags.split("-")
+        tags: post.tags
       };
       postDataArray.push(postData);
     }
@@ -141,9 +141,7 @@ export default function Home({ posts }) {
                             </Link>
                           </h2>
                           <div className="flex flex-wrap text-purple-600">
-                            {tags.map((tag) => (
-                              <Tag key={tag} text={tag} />
-                            ))}
+                            <Tag key={tags} text={tags} />
                           </div>
                         </div>
                         <div className="prose max-w-none text-pink-500 dark:text-pink-400">

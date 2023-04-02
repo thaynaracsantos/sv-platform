@@ -17,11 +17,13 @@ export async function getStaticProps() {
 
 	for (let i = 0; i < numPosts; i++) {
 	  const post = await contract.methods.posts(i).call();	  
-    const postTags = post.tags.split("-");
-
-    for (let j = 0; j < postTags.length; j++) {  
-      tags[postTags[j]] = 1;
+    if(post.tags in tags){
+      tags[post.tags] += 1;
     }
+    else {
+      tags[post.tags] = 1;
+    }
+    
 	}
 
   return { props: { tags } }
