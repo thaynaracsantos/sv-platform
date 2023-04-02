@@ -12,7 +12,7 @@ const ContainerCollapse = ({ title, children }) => {
   return (
     <div className="w-full">
       <button
-        className="w-full text-left py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-t focus:outline-none"
+        className="w-full text-black text-left py-2 px-4 bg-pink-200 hover:bg-pink-300 rounded-t focus:outline-none"
         onClick={toggleCollapse}
       >
         {title}
