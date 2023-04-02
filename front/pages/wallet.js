@@ -59,13 +59,13 @@ export default function MyComponent() {
           </h1>
         </div>
         <div className="container py-12 ">
-          <div className="-m-0 flex flex-wrap text-pink-500 space-y-2 pt-6 pb-8 md:space-y-5">
+          <div className="-m-0 flex flex-wrap text-pink-500">
             <div>
               <p><b>Mantenha seu desabafo anônimo!</b></p>
               <p>Para garantir o anonimato, aconselhamos que use essa Metamask, única e exclusivamente para a Vozes Seguras.</p>
             </div>
           </div>
-          <div className="-m-0 flex flex-wrap text-pink-500 ">
+          <div className="-m-0 flex flex-wrap text-pink-500 space-y-2 pt-6 pb-8 md:space-y-5">
             {jointOwnerAddress ? (
                 <p><span className="font-bold">Sua Conta {isContractOwner && (<span className="font-bold">(Adm)</span>)}: </span> {jointOwnerAddress}</p>
             ) : (
