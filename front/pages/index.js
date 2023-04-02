@@ -49,6 +49,18 @@ export default function Home({ posts }) {
     console.log(postDataArray);
   }
 
+  const handleCommentsByPostClick = async (postId) => {
+    event.preventDefault();
+
+    console.log(postId);
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
+    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+  
+    const postComments = await contract.methods.getPostComments(postId).call();
+
+    console.log(postComments);
+  }
+
   function formatTime(timestamp) {
     const date = new Date(timestamp * 1000);
     const options = { 
@@ -60,6 +72,46 @@ export default function Home({ posts }) {
     const formattedTime = date.toLocaleDateString('pt-BR', options);
     return formattedTime;
   }
+
+  const handleCommentClick = async (id, comment) => {
+    event.preventDefault();
+
+    console.log(id);
+    const web3Modal = new Web3Modal({
+      network: "celo", // Use the Celo Alfajores testnet
+      cacheProvider: true,
+    });
+    
+    console.log("web3Modal"); 
+    console.log(web3Modal); // Check if the web3Modal object is initialized
+    
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
+    
+    web3Modal.connect()
+      .then((provider) => {
+        console.log("provider"); 
+        console.log(provider); // Print the provider object
+
+        kit.web3.eth.setProvider(provider);
+
+        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);        
+
+        const account = provider.selectedAddress;
+
+        console.log(account);    
+        
+        const postId = id;
+        const postComment = comment;
+        console.log(postId);
+        console.log(postComment);
+        contract.methods.registerComment(postId, postComment).send({ from: account, gas: 3000000 });
+
+      })
+      .catch((error) => {
+        console.error("error");
+        console.error(error); // Handle any errors
+      }); 
+  };
 
   const handleLikeClick = async (id) => {
     event.preventDefault();
@@ -152,7 +204,18 @@ export default function Home({ posts }) {
                         <a href="" onClick={() => {handleLikeClick(id);}}>
                           <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>+{numLikes}
                         </a>   
-                      </div>                   
+                      </div>   
+
+                      <div className="w-full">
+                        <button
+                          className="w-full text-left py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-t focus:outline-none"
+                          onClick={() => {handleCommentsByPostClick(id);}}
+                        >                        
+                        </button>
+                        <div className="border-2 border-t-0 rounded-b p-4">
+                          Comentario
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </article>
