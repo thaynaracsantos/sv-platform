@@ -54,7 +54,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         contractOwner = msg.sender;
         numPosts = 0;    
 
-        _mint(msg.sender, 1000000 * 10 ** uint(decimals()-2));
+        _mint(msg.sender, 1000000 * 2 ** uint(decimals()-2));
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
@@ -117,7 +117,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         });
         postComments[_postId].push(comment);
 
-        _mint(msg.sender, 40);
+        _mint(msg.sender, 60);
 
         emit CommentRegistered(_postId, comment.id, _comment, msg.sender);
     }

@@ -950,11 +950,11 @@
 			]
 		},
 		"core/contracts/SVForum.sol": {
-			"keccak256": "0x1838a32cc7de5871380c5044df2f5c1e4c39b4768febb51474afcdc906b1409e",
+			"keccak256": "0xb375855628a127dcef1581aaf00df7bb8548c8f97621dd0fa8fd428d11cd5dec",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6561409c1cfdf034b2338b3b9a87d14f9ebb0bb9ad43a9b83bde6c8b20b4127c",
-				"dweb:/ipfs/Qmamw9jjQDChDnzFgCy3SsPps7DrfBXzGjFpBiqcSv9Q3F"
+				"bzz-raw://086ce2f83ae2f2bac695deeb398886fab9560574888c60544babc6a221b97d6f",
+				"dweb:/ipfs/Qmb1Vudg9jUSAFkNLbuirVPDNAZeMXLcUUEHt1gqfDj2R5"
 			]
 		}
 	},
