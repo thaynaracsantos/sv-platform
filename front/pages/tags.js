@@ -5,7 +5,7 @@ import siteMetadata from '@/data/siteMetadata'
 import kebabCase from '@/lib/utils/kebabCase'
 
 const ContractKit = require('@celo/contractkit');
-const contractAddress = '0xED3F33dD0401831955abFc828E6dBF09F400C54A'; 
+const contractAddress = '0x966578D05288ecC6B1F70b4FC50339cC9B0b7174'; 
 const SVForumJSON = require('./contracts/SVForum.json'); 
 
 export async function getStaticProps() {
