@@ -81,7 +81,7 @@ export default function NewPost() {
             </select>
             <label htmlFor="descricao">Desabafo</label>
             <textarea className='h-52 rounded' id="descricao" placeholder="Espaço seguro para contar o que te aflinge"/>
-            <button onClick={() => {handleNewPostClick(id);}} type="submit" className="bg-pink-500 focus:scale-95 hover:bg-pink-900 hover:-translate-y-2 transition-all ease-in-out duration-300 text-white font-bold py-2 px-4 rounded">
+            <button onClick={() => {handleNewPostClick("Titulo", "Desabafo", "Tag1");}} type="submit" className="bg-pink-500 focus:scale-95 hover:bg-pink-900 hover:-translate-y-2 transition-all ease-in-out duration-300 text-white font-bold py-2 px-4 rounded">
               Enviar
             </button>
           </form>
