@@ -13,16 +13,18 @@ const SVForumJSON = require('./contracts/SVForum.json');
 import Web3Modal from 'web3modal';
 import Web3 from 'web3';
 import { bufferToHex } from 'ethereumjs-util';
+import ViewComments from '@/components/ViewComments'
+import ContainerCollapse from '@/components/ContainerCollapse'
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
 
-  return { props: { posts } }
+return { props: { posts } }
 }
 
 export default function Home({ posts }) {
-
-  const [postDataArray, setPostDataArray] = useState([]);
+  const [postDataArray, setPostDataArray] = useState([]); // state control
+  const [selectedPostComments, setSelectedPostComments] = useState([]);
 
   // Métodos: getAllPosts handleCommentsByPostClick handleCommentClick handleLikeClick handleNewPostClick getContractOwner getStaticProps  
 
@@ -51,7 +53,7 @@ export default function Home({ posts }) {
     console.log(postDataArray);
   }
 
-  const handleCommentsByPostClick = async (postId) => {
+  const handleCommentsByPostClick = async (event, postId) => {
     event.preventDefault();
 
     console.log(postId);
@@ -61,6 +63,8 @@ export default function Home({ posts }) {
     const postComments = await contract.methods.getPostComments(postId).call();
 
     console.log(postComments);
+    setSelectedPostComments(postComments);
+
   }
 
   function formatTime(timestamp) {
@@ -157,6 +161,13 @@ export default function Home({ posts }) {
     getAllPosts();
   })
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsOpen(!isOpen);
+  };
+  
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
@@ -209,14 +220,14 @@ export default function Home({ posts }) {
                       </div>   
 
                       <div className="w-full">
-                        <button
-                          className="w-full text-left py-2 px-4 bg-gray-200 hover:bg-gray-300 rounded-t focus:outline-none"
-                          onClick={() => {handleCommentsByPostClick(id);}}
-                        >                        
-                        </button>
-                        <div className="border-2 border-t-0 rounded-b p-4">
-                          Comentario
-                        </div>
+                        <ViewComments onClick={() => handleCommentsByPostClick(id)} comments={selectedPostComments}>
+                          {/* Só chamar os comentários aqui.  */}
+                          {selectedPostComments.map((comment, index) => (
+                            <p key={index}>
+                              {comment}
+                            </p>
+                          ))}
+                        </ViewComments>
                       </div>
                     </div>
                   </div>
