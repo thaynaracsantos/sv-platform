@@ -154,7 +154,7 @@ export default function Home({ posts }) {
                           <img src="/static/images/solidariedade.png" alt="Solidariedade" width="25" height="25"/>+{numLikes}
                         </a>   
                       </div>   
-                    <ViewComments />
+                      <ViewComments />
 
                     </div>
                   </div>
