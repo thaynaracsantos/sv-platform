@@ -2,11 +2,27 @@ import Link from '@/components/Link'
 import { PageSEO } from '@/components/SEO'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { getAllTags } from '@/lib/tags'
 import kebabCase from '@/lib/utils/kebabCase'
 
+const ContractKit = require('@celo/contractkit');
+const contractAddress = '0xED3F33dD0401831955abFc828E6dBF09F400C54A'; 
+const SVForumJSON = require('./contracts/SVForum.json'); 
+
 export async function getStaticProps() {
-  const tags = await getAllTags('blog')
+  const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
+	const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+
+	const numPosts = await contract.methods.numPosts().call();
+	let tags = {}
+
+	for (let i = 0; i < numPosts; i++) {
+	  const post = await contract.methods.posts(i).call();	  
+    const postTags = post.tags.split("-");
+
+    for (let j = 0; j < postTags.length; j++) {  
+      tags[postTags[j]] = 1;
+    }
+	}
 
   return { props: { tags } }
 }
