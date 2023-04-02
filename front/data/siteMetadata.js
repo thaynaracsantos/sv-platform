@@ -14,6 +14,7 @@ const siteMetadata = {
   github: 'https://github.com/thaynaracsantos/sv-platform',
   twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
+  instagram: 'https://instagram.com',
   youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com',
   locale: 'en-US',
