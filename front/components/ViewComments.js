@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import ContainerCollapse from './ContainerCollapse';
 
-const comments = [
-  { id: 1, text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sodales laoreet ligula, vel fermentum magna pharetra a. Cras tristique neque in mi fringilla, a feugiat urna consequat.' },
-  { id: 2, text: 'Força!' },
-  { id: 3, text: 'Justiça!' },
-];
-
-function ViewComments({ children, content, onSubmitComment }) {
+function ViewComments({ onSubmitComment, onClick, comments }) {
   const [commentText, setCommentText] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmitComment(commentText);
+    const newComment = {
+      id: comments.length + 1,
+      text: commentText,
+    };
+    onSubmitComment(newComment);
     setCommentText('');
   };
 
@@ -44,7 +42,7 @@ function ViewComments({ children, content, onSubmitComment }) {
         <ul className="flex flex-col gap-2">
           {comments.map((comment) => (
             <li key={comment.id}>
-              <div className="border rounded px-1 py-2">{content}</div>
+              <div className="border rounded px-1 py-2">{comment.text}</div>
             </li>
           ))}
         </ul>

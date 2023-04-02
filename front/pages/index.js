@@ -154,8 +154,16 @@ export default function Home({ posts }) {
       .catch((error) => {
         console.error("error");
         console.error(error); // Handle any errors
-      }); 
+    }); 
   };
+
+  const [comments, setComments] = useState([]);
+
+  const handleNewComment = (newComment) => {
+    setComments([...comments, newComment]);
+  };
+
+  
 
   useEffect(() => {
     getAllPosts();
@@ -220,14 +228,7 @@ export default function Home({ posts }) {
                       </div>   
 
                       <div className="w-full">
-                        <ViewComments onClick={() => handleCommentsByPostClick(id)} comments={selectedPostComments}>
-                          {/* Só chamar os comentários aqui.  */}
-                          {selectedPostComments.map((comment, index) => (
-                            <p key={index}>
-                              {comment}
-                            </p>
-                          ))}
-                        </ViewComments>
+                        <ViewComments onSubmitComment={handleNewComment} onClick={() => {}} comments={comments} />
                       </div>
                     </div>
                   </div>
@@ -239,4 +240,4 @@ export default function Home({ posts }) {
       </div>
     </>
   )
-}
+};
