@@ -59,12 +59,13 @@ function Faq() {
     <div>
       <h2 className='font-bold uppercase'>Faq - Dúvidas Frequentes</h2>
       <div>
-        {listQuestions(question => {
+        {listQuestions.map(question => (
           <ContainerCollapse key={question.id} title={question.question}>
-            {question.answer}
+            <p>
+              {question.answer}
+            </p>
           </ContainerCollapse>
-
-        })}
+        ))}
       </div>
     </div>
   )
