@@ -24,6 +24,8 @@ export default function Home({ posts }) {
 
   const [postDataArray, setPostDataArray] = useState([]);
 
+  // Métodos: getAllPosts handleCommentsByPostClick handleCommentClick handleLikeClick handleNewPostClick getContractOwner getStaticProps  
+
   const getAllPosts = async () => {
     const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
     const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
