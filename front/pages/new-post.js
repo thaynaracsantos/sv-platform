@@ -7,8 +7,7 @@ import Web3Modal from 'web3modal';
 export default function NewPost() {  
     const handleNewPostClick = async (title, description, tags) => {
         event.preventDefault();
-    
-        console.log(postId);
+
         const web3Modal = new Web3Modal({
           network: "celo", // Use the Celo Alfajores testnet
           cacheProvider: true,

@@ -1,12 +1,12 @@
 
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-      <title>Next.js</title>
+      <title>Para todas as mulheres</title>
       <link>https://tailwind-nextjs-starter-blog.vercel.app/blog</link>
-      <description>Forum para...</description>
+      <description>Espaço seguro para desabafar sem medo.</description>
       <language>en-us</language>
-      <managingEditor>address@yoursite.com (Vozes Seguras)</managingEditor>
-      <webMaster>address@yoursite.com (Vozes Seguras)</webMaster>
+      <managingEditor>vozesseguras@gmail.com (Vozes Seguras)</managingEditor>
+      <webMaster>vozesseguras@gmail.com (Vozes Seguras)</webMaster>
       <lastBuildDate>Sat, 15 Jul 2017 00:00:00 GMT</lastBuildDate>
       <atom:link href="https://tailwind-nextjs-starter-blog.vercel.app/tags/canada/feed.xml" rel="self" type="application/rss+xml"/>
       
@@ -16,7 +16,7 @@
     <link>https://tailwind-nextjs-starter-blog.vercel.app/blog/pictures-of-canada</link>
     <description>The scenic lands of Canada featuring maple leaves, snow-capped mountains, turquoise lakes and Toronto. Take in the sights in this photo gallery exhibition and see how easy it is to replicate with some MDX magic and tailwind classes.</description>
     <pubDate>Sat, 15 Jul 2017 00:00:00 GMT</pubDate>
-    <author>address@yoursite.com (Vozes Seguras)</author>
+    <author>vozesseguras@gmail.com (Vozes Seguras)</author>
     <category>holiday</category><category>canada</category><category>images</category>
   </item>
 
