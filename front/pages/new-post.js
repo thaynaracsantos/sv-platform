@@ -24,13 +24,29 @@ const hashTagList = [
 
 export default function NewPost() {
     const [selectedHashTag, setSelectedHashTag] = useState(hashTagList[0]);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
   
     const handleChange = (event) => {
-      setSelectedHashTag(event.target.value);
+        event.preventDefault();
+        setSelectedHashTag(event.target.value);
     };
 
-    const handleNewPostClick = async (title, description, tags) => {
+    const handleTitleChange = (event) => {
         event.preventDefault();
+        setTitle(event.target.value);
+    };
+    
+    const handleDescriptionChange = (event) => {
+        event.preventDefault();
+        setDescription(event.target.value);
+    };
+
+    const handleNewPostClick = async (event) => {
+        event.preventDefault();
+        console.log('Titulo:', title);
+        console.log('Descricao:', description);
+        console.log('Hashtag:', selectedHashTag);
 
         const web3Modal = new Web3Modal({
           network: "celo", // Use the Celo Alfajores testnet
@@ -55,7 +71,7 @@ export default function NewPost() {
     
             console.log(account);    
             
-            contract.methods.newPost(title, description, tags).send({ from: account, gas: 3000000 });
+            contract.methods.newPost(title, description, selectedHashTag).send({ from: account, gas: 3000000 });
     
           })
           .catch((error) => {
@@ -70,7 +86,7 @@ export default function NewPost() {
           <h2 className="text-2xl font-bold uppercase">DESABAFE AQUI!</h2>
           <form className="flex flex-col gap-2 font-light">
             <label htmlFor="titulo">Tópico</label>
-            <input type="text" id="titulo" placeholder="Insira o tópico do seu desabafo" className="text-black rounded" />
+            <input type="text" id="titulo" placeholder="Insira o tópico do seu desabafo" className="text-black rounded" value={title} onChange={handleTitleChange}/>
             <label htmlFor="hashTag">Categoria</label>
             <select className='rounded' id="hashTag" value={selectedHashTag} onChange={handleChange}>
               {hashTagList.map((hashTag) => (
@@ -80,8 +96,8 @@ export default function NewPost() {
               ))}
             </select>
             <label htmlFor="descricao">Desabafo</label>
-            <textarea className='h-52 rounded' id="descricao" placeholder="Espaço seguro para contar o que te aflinge"/>
-            <button onClick={() => {handleNewPostClick("Titulo", "Desabafo", "Tag1");}} type="submit" className="bg-pink-500 focus:scale-95 hover:bg-pink-900 hover:-translate-y-2 transition-all ease-in-out duration-300 text-white font-bold py-2 px-4 rounded">
+            <textarea className='h-52 rounded' id="descricao" placeholder="Espaço seguro para contar o que te aflinge" value={description} onChange={handleDescriptionChange}/>
+            <button onClick={handleNewPostClick} type="submit" className="bg-pink-500 focus:scale-95 hover:bg-pink-900 hover:-translate-y-2 transition-all ease-in-out duration-300 text-white font-bold py-2 px-4 rounded">
               Enviar
             </button>
           </form>
