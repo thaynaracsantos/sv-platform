@@ -46,6 +46,37 @@
 					},
 					{
 						"indexed": false,
+						"internalType": "uint256",
+						"name": "commentId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "comment",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "CommentRegistered",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "postId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
 						"internalType": "address",
 						"name": "user",
 						"type": "address"
@@ -293,9 +324,55 @@
 								"internalType": "string",
 								"name": "tags",
 								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "numComments",
+								"type": "uint256"
 							}
 						],
 						"internalType": "struct SVForum.PostData[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_postId",
+						"type": "uint256"
+					}
+				],
+				"name": "getPostComments",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "text",
+								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "user",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct SVForum.PostComment[]",
 						"name": "",
 						"type": "tuple[]"
 					}
@@ -475,6 +552,45 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "postComments",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "text",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"name": "posts",
@@ -516,6 +632,24 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_postId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_comment",
+						"type": "string"
+					}
+				],
+				"name": "registerComment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -816,11 +950,11 @@
 			]
 		},
 		"core/contracts/SVForum.sol": {
-			"keccak256": "0xf3fcec30fe6360802552aae50db971bc0af57790a9c1761b1dce6f2d81cddaa6",
+			"keccak256": "0xb375855628a127dcef1581aaf00df7bb8548c8f97621dd0fa8fd428d11cd5dec",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f3515e91dd6f9754f990719f98076275fc72d020ea8a8f418e88a10beb4f0748",
-				"dweb:/ipfs/QmezJtyphr6reK8PB9UhYkScCYTcMpe4EAXQbwc8oLMckV"
+				"bzz-raw://086ce2f83ae2f2bac695deeb398886fab9560574888c60544babc6a221b97d6f",
+				"dweb:/ipfs/Qmb1Vudg9jUSAFkNLbuirVPDNAZeMXLcUUEHt1gqfDj2R5"
 			]
 		}
 	},

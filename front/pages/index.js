@@ -7,7 +7,7 @@ import { getAllFilesFrontMatter } from '@/lib/mdx'
 import { useState, useEffect } from 'react';
 
 const ContractKit = require('@celo/contractkit');
-const contractAddress = '0xED3F33dD0401831955abFc828E6dBF09F400C54A'; 
+const contractAddress = '0xE4Be9782DB96A9EE92114Ec5D0a3fE72AabDF949'; 
 const SVForumJSON = require('./contracts/SVForum.json'); 
 
 import Web3Modal from 'web3modal';

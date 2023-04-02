@@ -29,20 +29,32 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         uint numLikes;
         uint timestamp;
         string tags;
+        uint numComments;
+    }
+
+    struct PostComment {
+        uint id;
+        string text;
+        address user;
+        uint timestamp;
     }
 
     // Mapping of Posts
     mapping(uint => Post) public posts;
 
+    // Mapping of PostComments
+    mapping(uint => PostComment[]) public postComments;
+
     // Event Declarations
     event NewPost(string title, string description, address user);
     event LikeRegistered(uint postId, address user);
+    event CommentRegistered(uint postId, uint commentId, string comment, address user);
 
     constructor() ERC20("SafeCoin", "SAFE") ERC20Permit("SafeCoin") {
         contractOwner = msg.sender;
         numPosts = 0;    
 
-        _mint(msg.sender, 1000000 * 10 ** decimals());    
+        _mint(msg.sender, 1000000 * 2 ** uint(decimals()-2));
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
@@ -61,7 +73,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         post.tags = _tags;
         numPosts++;
 
-        _mint(msg.sender, 10); 
+        _mint(msg.sender, 180); 
 
         emit NewPost(_title, _description, msg.sender);       
     }
@@ -78,7 +90,8 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
                 user: post.user,
                 numLikes: post.numLikes,
                 timestamp: post.timestamp,
-                tags: post.tags
+                tags: post.tags,
+                numComments: postComments[i].length
             });
             postDataArray[i] = postData;
         }
@@ -90,9 +103,26 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         posts[_postId].likes[msg.sender] = true;
         posts[_postId].numLikes++;
 
-        _mint(msg.sender, 10);
+        _mint(msg.sender, 20);
 
         emit LikeRegistered(_postId, msg.sender);
     }
 
+    function registerComment(uint _postId, string memory _comment) public {  
+        PostComment memory comment = PostComment({
+            id: postComments[_postId].length,
+            text: _comment,
+            user: msg.sender,
+            timestamp: block.timestamp
+        });
+        postComments[_postId].push(comment);
+
+        _mint(msg.sender, 60);
+
+        emit CommentRegistered(_postId, comment.id, _comment, msg.sender);
+    }
+
+    function getPostComments(uint _postId) public view returns (PostComment[] memory) {
+        return postComments[_postId];
+    }
 }
