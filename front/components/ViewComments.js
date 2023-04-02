@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import ContainerCollapse from './ContainerCollapse';
 
-const comments = [
-  { id: 1, text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sodales laoreet ligula, vel fermentum magna pharetra a. Cras tristique neque in mi fringilla, a feugiat urna consequat.' },
-  { id: 2, text: 'Força!' },
-  { id: 3, text: 'Justiça!' },
-];
-
-function ViewComments({ children, content, onSubmitComment }) {
+function ViewComments({ onSubmitComment, onClick, comments }) {
   const [commentText, setCommentText] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmitComment(commentText);
-    setCommentText('');
+    const newComment = {
+      id: comments.length + 1,
+      text: commentText,
+    };
+    try {
+      await onSubmitComment(newComment);
+      setCommentText('');
+      setFeedbackMessage({ type: 'success', text: 'Comentário enviado com sucesso!' });
+  
+      // Remove feedback message after 2 seconds
+      setTimeout(() => {
+        setFeedbackMessage(null);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setFeedbackMessage({ type: 'error', text: 'Houve um erro ao enviar o comentário.' });
+    }
   };
+  
+
+  const [feedbackMessage, setFeedbackMessage] = useState(null);
 
   return (
     <>
@@ -44,10 +56,22 @@ function ViewComments({ children, content, onSubmitComment }) {
         <ul className="flex flex-col gap-2">
           {comments.map((comment) => (
             <li key={comment.id}>
-              <div className="border rounded px-1 py-2">{content}</div>
+              <div className="border rounded px-1 py-2">{comment.text}</div>
             </li>
           ))}
         </ul>
+
+        {feedbackMessage && (
+          <div
+            className={`p-2 text-white ${
+              feedbackMessage.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } transition-opacity duration-300 ${
+              feedbackMessage ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {feedbackMessage && feedbackMessage.text}
+          </div>
+        )}
       </ContainerCollapse>
     </>
   );
