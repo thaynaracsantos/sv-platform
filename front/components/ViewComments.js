@@ -7,7 +7,7 @@ const comments = [
   { id: 3, text: 'Justiça!' },
 ];
 
-function ViewComments() {
+function ViewComments({children, content}) {
   return (
     <>
       <ContainerCollapse title={'Ver comentários'}>
@@ -15,9 +15,7 @@ function ViewComments() {
           {comments.map((comment) => (
             <li key={comment.id}>
               <div className='border rounded px-1 py-2'>
-                <p>
-                  {comment.text}
-                </p>
+                {content}
               </div>
             </li>
           ))}
