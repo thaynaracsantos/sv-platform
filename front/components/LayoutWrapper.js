@@ -14,14 +14,14 @@ const LayoutWrapper = ({ children }) => {
         <header className="flex items-center justify-between py-10">
           <div>
             <Link href="/" aria-label={siteMetadata.headerTitle}>
-              <div className="flex items-center justify-between">
-                <div className="mr-3">
+              <div className="flex justify-between items-center">
+                <div className="">
                   <Logo />
                 </div>
                 {typeof siteMetadata.headerTitle === 'string' ? (
-                  <div className="hidden h-6 text-2xl font-semibold sm:block">
+                  <h1 className="text-xl lg:text-2xl font-semibold">
                     {siteMetadata.headerTitle}
-                  </div>
+                  </h1>
                 ) : (
                   siteMetadata.headerTitle
                 )}

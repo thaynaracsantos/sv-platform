@@ -14,7 +14,8 @@ const siteMetadata = {
   github: 'https://github.com/thaynaracsantos/sv-platform',
   twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
+  instagram: 'https://www.instagram.com/vozesseguras/',
+  youtube: 'https://www.youtube.com/@VozesSeguras',
   linkedin: 'https://www.linkedin.com',
   locale: 'en-US',
   analytics: {
