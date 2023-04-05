@@ -11,10 +11,6 @@ const contractAddress = '0xE4Be9782DB96A9EE92114Ec5D0a3fE72AabDF949';
 const SVForumJSON = require('./contracts/SVForum.json'); 
 
 import Web3Modal from 'web3modal';
-import Web3 from 'web3';
-import { bufferToHex } from 'ethereumjs-util';
-import ViewComments from '@/components/ViewComments'
-import ContainerCollapse from '@/components/ContainerCollapse'
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
@@ -24,9 +20,7 @@ return { props: { posts } }
 
 export default function Home({ posts }) {
   const [postDataArray, setPostDataArray] = useState([]); // state control
-  const [selectedPostComments, setSelectedPostComments] = useState([]);
-
-  // Métodos: getAllPosts handleCommentsByPostClick handleCommentClick handleLikeClick handleNewPostClick getContractOwner getStaticProps  
+  const [isOpen, setIsOpen] = useState(false);
 
   const getAllPosts = async () => {
     const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
@@ -37,34 +31,24 @@ export default function Home({ posts }) {
   
     for (let i = 0; i < numPosts; i++) {
       const post = await contract.methods.posts(i).call();
-      const postData = {
-        id: post.id,
-        title: post.title,
-        description: post.description,
-        user: post.user,
-        numLikes: post.numLikes,
-        timestamp: post.timestamp,
-        tags: post.tags
-      };
-      postDataArray.push(postData);
+      if(!post.title.includes('teste')){
+        const comments = await contract.methods.getPostComments(post.id).call();
+        const postData = {
+          id: post.id,
+          title: post.title,
+          description: post.description,
+          user: post.user,
+          numLikes: post.numLikes,
+          timestamp: post.timestamp,
+          tags: post.tags,
+          comments: comments
+        };
+        postDataArray.push(postData);
+      }
     }
   
     setPostDataArray(postDataArray);
     console.log(postDataArray);
-  }
-
-  const handleCommentsByPostClick = async (event, postId) => {
-    event.preventDefault();
-
-    console.log(postId);
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
-    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
-  
-    const postComments = await contract.methods.getPostComments(postId).call();
-
-    console.log(postComments);
-    setSelectedPostComments(postComments);
-
   }
 
   function formatTime(timestamp) {
@@ -78,46 +62,6 @@ export default function Home({ posts }) {
     const formattedTime = date.toLocaleDateString('pt-BR', options);
     return formattedTime;
   }
-
-  const handleCommentClick = async (id, comment) => {
-    event.preventDefault();
-
-    console.log(id);
-    const web3Modal = new Web3Modal({
-      network: "celo", // Use the Celo Alfajores testnet
-      cacheProvider: true,
-    });
-    
-    console.log("web3Modal"); 
-    console.log(web3Modal); // Check if the web3Modal object is initialized
-    
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
-    
-    web3Modal.connect()
-      .then((provider) => {
-        console.log("provider"); 
-        console.log(provider); // Print the provider object
-
-        kit.web3.eth.setProvider(provider);
-
-        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);        
-
-        const account = provider.selectedAddress;
-
-        console.log(account);    
-        
-        const postId = id;
-        const postComment = comment;
-        console.log(postId);
-        console.log(postComment);
-        contract.methods.registerComment(postId, postComment).send({ from: account, gas: 3000000 });
-
-      })
-      .catch((error) => {
-        console.error("error");
-        console.error(error); // Handle any errors
-      }); 
-  };
 
   const handleLikeClick = async (id) => {
     event.preventDefault();
@@ -155,21 +99,42 @@ export default function Home({ posts }) {
         console.error("error");
         console.error(error); // Handle any errors
     }); 
-  };
+  };  
 
-  const [comments, setComments] = useState([]);
+  const handleNewComment = async (postId) => {
+    event.preventDefault();
 
-  const handleNewComment = (newComment) => {
-    setComments([...comments, newComment]);
-  };
+    const comment = event.target.querySelector('#comment').value;
 
-  
+    await createComment(postId, comment);
+  }
+
+  const createComment = async (postId, comment) => {
+    const web3Modal = new Web3Modal({
+      network: "celo", // Use the Celo Alfajores testnet
+      cacheProvider: true,
+    });
+
+    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
+
+    web3Modal.connect()
+        .then((provider) => {
+            kit.web3.eth.setProvider(provider);
+
+            const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+
+            const account = provider.selectedAddress;
+
+            console.log('createComment');
+            console.log(postId);
+            console.log(comment);
+            contract.methods.registerComment(postId, comment).send({ from: account, gas: 3000000 });        
+        });
+  }
 
   useEffect(() => {
     getAllPosts();
   })
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
@@ -191,7 +156,7 @@ export default function Home({ posts }) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!postDataArray.length && 'Nenhum post encontrado.'}
           {postDataArray.map((postData) => {
-            const { id, timestamp,  title, description, user, numLikes, tags} = postData
+            const { id, timestamp,  title, description, user, numLikes, tags, comments} = postData
             return (
               <li key={id} className="py-12">
                 <article>
@@ -228,7 +193,47 @@ export default function Home({ posts }) {
                       </div>   
 
                       <div className="w-full">
-                        <ViewComments onSubmitComment={handleNewComment} onClick={() => {}} comments={comments} />
+
+                        <div className="w-full">
+                          <button
+                            className="w-full text-black text-left py-2 px-4 bg-pink-200 hover:bg-pink-300 rounded-t focus:outline-none"
+                            onClick={toggleCollapse}
+                          >
+                            Ver comentários
+                          </button>
+                          {isOpen && (
+                          <div className="border-2 border-t-0 rounded-b p-4">
+                            <form onSubmit={() => {handleNewComment(id);}}>
+                              <label htmlFor="comment" className="sr-only">
+                                Comentário
+                              </label>
+                              <textarea
+                                id="comment"
+                                name="comment"
+                                rows="3"
+                                className="w-full px-3 py-2 text-gray-700 border rounded focus:outline-none"
+                                placeholder="Escreva seu comentário"
+                                required
+                              ></textarea>
+                              <button
+                                type="submit"
+                                className="mb-4 px-4 py-2 mt-2 font-semibold text-white bg-pink-500 rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all ease-in-out duration-300"
+                              >
+                                Enviar comentário
+                              </button>
+                            </form>                          
+
+                            <ul className="flex flex-col gap-2">
+                              {
+                              comments.map((comment) => (
+                                <li key={comment.id}>
+                                  <div className="border rounded px-1 py-2">{comment.text}</div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
