@@ -1,4 +1,6 @@
+import HeadLineHome from '@/components/HeadLineHome'
 import Link from '@/components/Link'
+import Loading from '@/components/Loading'
 import { PageSEO } from '@/components/SEO'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -12,15 +14,16 @@ const SVForumJSON = require('./contracts/SVForum.json');
 
 import Web3Modal from 'web3modal';
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const posts = await getAllFilesFrontMatter('blog')
-
-return { props: { posts } }
+  return { props: { posts } }
 }
 
 export default function Home({ posts }) {
-  const [postDataArray, setPostDataArray] = useState([]); // state control
+  const [postDataArray, setPostDataArray] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState({});
+
 
   const getAllPosts = async () => {
     const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
@@ -48,7 +51,7 @@ export default function Home({ posts }) {
     }
   
     setPostDataArray(postDataArray);
-    console.log(postDataArray);
+    // console.log(postDataArray);
   }
 
   function formatTime(timestamp) {
@@ -66,21 +69,21 @@ export default function Home({ posts }) {
   const handleLikeClick = async (id) => {
     event.preventDefault();
 
-    console.log(id);
-    const web3Modal = new Web3Modal({
-      network: "celo", // Use the Celo Alfajores testnet
-      cacheProvider: true,
-    });
+    // console.log(id);
+    // const web3Modal = new Web3Modal({
+    //   network: "celo", // Use the Celo Alfajores testnet
+    //   cacheProvider: true,
+    // });
     
-    console.log("web3Modal"); 
-    console.log(web3Modal); // Check if the web3Modal object is initialized
+    // console.log("web3Modal"); 
+    // console.log(web3Modal); // Check if the web3Modal object is initialized
     
     const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
     
     web3Modal.connect()
       .then((provider) => {
-        console.log("provider"); 
-        console.log(provider); // Print the provider object
+        // console.log("provider"); 
+        // console.log(provider); // Print the provider object
 
         kit.web3.eth.setProvider(provider);
 
@@ -88,26 +91,24 @@ export default function Home({ posts }) {
 
         const account = provider.selectedAddress;
 
-        console.log(account);    
+        // console.log(account);    
         
         const postId = id;
-        console.log(postId);
+        // console.log(postId);
         contract.methods.registerLike(postId).send({ from: account, gas: 3000000 });
 
       })
       .catch((error) => {
-        console.error("error");
-        console.error(error); // Handle any errors
+        // console.error("error");
+        // console.error(error); // Handle any errors
     }); 
   };  
 
-  const handleNewComment = async (postId) => {
+  const handleNewComment = async (event, postId) => {
     event.preventDefault();
-
     const comment = event.target.querySelector('#comment').value;
-
     await createComment(postId, comment);
-  }
+  };
 
   const createComment = async (postId, comment) => {
     const web3Modal = new Web3Modal({
@@ -125,9 +126,9 @@ export default function Home({ posts }) {
 
             const account = provider.selectedAddress;
 
-            console.log('createComment');
-            console.log(postId);
-            console.log(comment);
+            // console.log('createComment');
+            // console.log(postId);
+            // console.log(comment);
             contract.methods.registerComment(postId, comment).send({ from: account, gas: 3000000 });        
         });
   }
@@ -136,8 +137,8 @@ export default function Home({ posts }) {
     getAllPosts();
   })
 
-  const toggleCollapse = () => {
-    setIsOpen(!isOpen);
+  const toggleCollapse = (id) => {
+    setIsCommentOpen((prevState) => ({ ...prevState, [id]: !prevState[id] }));
   };
   
 
@@ -145,16 +146,9 @@ export default function Home({ posts }) {
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-pink-900 dark:text-pink-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
-            Desabafos
-          </h1>
-          <p className="text-lg leading-7 text-pink-500 dark:text-pink-400">
-            {siteMetadata.description}
-          </p>
-        </div>
+        <HeadLineHome />
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!postDataArray.length && 'Nenhum post encontrado.'}
+          {!postDataArray.length && (<Loading />)}
           {postDataArray.map((postData) => {
             const { id, timestamp,  title, description, user, numLikes, tags, comments} = postData
             return (
@@ -197,13 +191,13 @@ export default function Home({ posts }) {
                         <div className="w-full">
                           <button
                             className="w-full text-black text-left py-2 px-4 bg-pink-200 hover:bg-pink-300 rounded-t focus:outline-none"
-                            onClick={toggleCollapse}
+                            onClick={() => toggleCollapse(id)}
                           >
                             Ver comentários
                           </button>
-                          {isOpen && (
+                          {isCommentOpen[id] && (
                           <div className="border-2 border-t-0 rounded-b p-4">
-                            <form onSubmit={() => {handleNewComment(id);}}>
+                            <form onSubmit={(event) => {handleNewComment(event, id);}}>
                               <label htmlFor="comment" className="sr-only">
                                 Comentário
                               </label>
@@ -231,6 +225,7 @@ export default function Home({ posts }) {
                                 </li>
                               ))}
                             </ul>
+
                           </div>
                           )}
                         </div>

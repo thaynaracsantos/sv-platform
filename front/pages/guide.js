@@ -8,12 +8,11 @@ export default function Guide() {
             Guia de Uso
           </h1>
         </div>
-        <div className="container py-12 ">
+        <div className="container py-12">
           <div className="-m-0 flex flex-wrap text-pink-500">
-            <div>
+            <div className='w-full flex flex-col gap-1'>
               <ContainerCollapse key="1" title="Como criar uma Metamask?">
                 <div className="-m-0 flex flex-wrap text-pink-500 space-y-2 pt-6 pb-8 md:space-y-5"><u>Extensão do Navegador:</u></div>
-
                 <div>Passo 1 - Baixe a extensão Metamask para o seu navegador (disponível para Chrome, Firefox, Edge, Brave, etc.)</div>
                 <div>asso 2 - Abra a extensão Metamask e clique em "Create a Wallet" (Criar uma carteira)</div>
                 <div>Passo 3 - Crie uma senha forte e única e confirme-a</div>
