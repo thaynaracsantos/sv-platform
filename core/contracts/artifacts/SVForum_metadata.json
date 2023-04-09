@@ -285,7 +285,18 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "page",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "perPage",
+						"type": "uint256"
+					}
+				],
 				"name": "getAllPosts",
 				"outputs": [
 					{
@@ -950,11 +961,11 @@
 			]
 		},
 		"core/contracts/SVForum.sol": {
-			"keccak256": "0xb375855628a127dcef1581aaf00df7bb8548c8f97621dd0fa8fd428d11cd5dec",
+			"keccak256": "0xed056f79c06aa9367b1fc1d03f2251ee499d056a0684be34442bbf130772e268",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://086ce2f83ae2f2bac695deeb398886fab9560574888c60544babc6a221b97d6f",
-				"dweb:/ipfs/Qmb1Vudg9jUSAFkNLbuirVPDNAZeMXLcUUEHt1gqfDj2R5"
+				"bzz-raw://808024a07cc1292b25acce314e0fcae3f553e79eece2527492d2a0f41aee1f14",
+				"dweb:/ipfs/QmXVAFC2MhKMvmmVt42L1ocF3XGR7AhDL9pC3r38LSidvX"
 			]
 		}
 	},

@@ -54,7 +54,7 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
         contractOwner = msg.sender;
         numPosts = 0;    
 
-        _mint(msg.sender, 1000000 * 2 ** uint(decimals()-2));
+        _mint(msg.sender, 3 * 10 ** 24);
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
@@ -79,9 +79,15 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
     }
 
     // Function to get all the posts
-    function getAllPosts() public view returns (PostData[] memory) {
-        PostData[] memory postDataArray = new PostData[](numPosts);
-        for (uint i = 0; i < numPosts; i++) {
+    function getAllPosts(uint page, uint perPage) public view returns (PostData[] memory) {
+        require(page > 0, "Page number should be greater than zero");
+        require(perPage > 0, "PerPage number should be greater than zero");
+        
+        uint startIndex = (page - 1) * perPage;
+        uint endIndex = startIndex + perPage > numPosts ? numPosts : startIndex + perPage;
+        
+        PostData[] memory postDataArray = new PostData[](endIndex - startIndex);
+        for (uint i = startIndex; i < endIndex; i++) {
             Post storage post = posts[i];
             PostData memory postData = PostData({
                 id: post.id,
@@ -93,13 +99,15 @@ contract SVForum is ERC20, Ownable, ERC20Permit {
                 tags: post.tags,
                 numComments: postComments[i].length
             });
-            postDataArray[i] = postData;
+            postDataArray[i - startIndex] = postData;
         }
         return postDataArray;
     }
 
     // Function to register a new like
     function registerLike(uint _postId) public {
+        require(!posts[_postId].likes[msg.sender], "You have already registered a like for this post");
+
         posts[_postId].likes[msg.sender] = true;
         posts[_postId].numLikes++;
 
