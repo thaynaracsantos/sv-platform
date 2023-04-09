@@ -1,10 +1,12 @@
-const ContractKit = require('@celo/contractkit');
-const contractAddress = '0xE4Be9782DB96A9EE92114Ec5D0a3fE72AabDF949'; 
-const SVForumJSON = require('./contracts/SVForum.json'); 
+import React, { useState } from 'react';
 
 import Web3Modal from 'web3modal';
 
-import React, { useState } from 'react';
+const contractAddress = '0x44E7477B4D6ff1CC8ee18677021FE11591399dAD'; 
+const url = 'https://polygon-mumbai.g.alchemy.com/v2/9nTsL13BqFT3QTlnN8SlTQMt2PvQQnYv';
+const SVForumJSON = require('./contracts/SVForum.json'); 
+const Web3 = require('web3');
+const web3 = new Web3(url);
 
 const hashTagList = [
   '#AGRESSAO',
@@ -50,27 +52,17 @@ export default function NewPost() {
         console.log('Hashtag:', selectedHashTag);
 
         const web3Modal = new Web3Modal({
-          network: "celo", // Use the Celo Alfajores testnet
+          network: "mumbai",
           cacheProvider: true,
         });
-        
-        console.log("web3Modal"); 
-        console.log(web3Modal); // Check if the web3Modal object is initialized
-        
-        const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
-        
+
         web3Modal.connect()
-          .then((provider) => {
-            console.log("provider"); 
-            console.log(provider); // Print the provider object
-    
-            kit.web3.eth.setProvider(provider);
-    
-            const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);        
+          .then((provider) => {    
+            web3.eth.setProvider(provider);
+
+            const contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);         
     
             const account = provider.selectedAddress;
-    
-            console.log(account);    
             
             contract.methods.newPost(title, description, selectedHashTag).send({ from: account, gas: 3000000 });
     
