@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 
-const ContractKit = require('@celo/contractkit');
-const contractAddress = '0x6389b1F4Ea365E62fa88b4648a54E18017a315B9'; 
+const contractAddress = '0x44E7477B4D6ff1CC8ee18677021FE11591399dAD'; 
+const url = 'https://polygon-mumbai.g.alchemy.com/v2/9nTsL13BqFT3QTlnN8SlTQMt2PvQQnYv';
 const SVForumJSON = require('./contracts/SVForum.json'); 
+const Web3 = require('web3');
+const web3 = new Web3(url);
 
 export default function MyComponent() {
     const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -31,10 +33,10 @@ export default function MyComponent() {
 
   const getContractOwner = async () => {
     try {
-        const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
-        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+        var contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);
       
         const owner = await contract.methods.contractOwner().call();
+        console.log(owner);
         setContractOwnerAddress(owner);
 
         if (owner.toLowerCase() === jointOwnerAddress.toLowerCase()) {

@@ -4,13 +4,14 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import kebabCase from '@/lib/utils/kebabCase'
 
-const ContractKit = require('@celo/contractkit');
-const contractAddress = '0xE4Be9782DB96A9EE92114Ec5D0a3fE72AabDF949'; 
+const contractAddress = '0x44E7477B4D6ff1CC8ee18677021FE11591399dAD'; 
+const url = 'https://polygon-mumbai.g.alchemy.com/v2/9nTsL13BqFT3QTlnN8SlTQMt2PvQQnYv';
 const SVForumJSON = require('./contracts/SVForum.json'); 
+const Web3 = require('web3');
+const web3 = new Web3(url);
 
 export async function getStaticProps() {
-  const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
-	const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+  var contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);
 
 	const numPosts = await contract.methods.numPosts().call();
 	let tags = {}

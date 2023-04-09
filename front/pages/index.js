@@ -6,11 +6,13 @@ import { getAllFilesFrontMatter } from '@/lib/mdx'
 
 import { useState, useEffect } from 'react';
 
-const ContractKit = require('@celo/contractkit');
-const contractAddress = '0xE4Be9782DB96A9EE92114Ec5D0a3fE72AabDF949'; 
-const SVForumJSON = require('./contracts/SVForum.json'); 
-
 import Web3Modal from 'web3modal';
+
+const contractAddress = '0x44E7477B4D6ff1CC8ee18677021FE11591399dAD'; 
+const url = 'https://polygon-mumbai.g.alchemy.com/v2/9nTsL13BqFT3QTlnN8SlTQMt2PvQQnYv';
+const SVForumJSON = require('./contracts/SVForum.json'); 
+const Web3 = require('web3');
+const web3 = new Web3(url);
 
 export async function getStaticProps() {
   const posts = await getAllFilesFrontMatter('blog')
@@ -23,14 +25,17 @@ export default function Home({ posts }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const getAllPosts = async () => {
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org');
-    const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+    const contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);
   
-    const numPosts = await contract.methods.numPosts().call();
+    const page = 1;
+    const perPage = 5;
+    const posts = await contract.methods.getAllPosts(page, perPage).call();
+
+    const numPosts = posts.length;
     const postDataArray = [];
-  
+
     for (let i = 0; i < numPosts; i++) {
-      const post = await contract.methods.posts(i).call();
+      const post = posts[i];
       if(!post.title.includes('teste')){
         const comments = await contract.methods.getPostComments(post.id).call();
         const postData = {
@@ -66,39 +71,33 @@ export default function Home({ posts }) {
   const handleLikeClick = async (id) => {
     event.preventDefault();
 
-    console.log(id);
     const web3Modal = new Web3Modal({
-      network: "celo", // Use the Celo Alfajores testnet
+      network: "mumbai",
       cacheProvider: true,
     });
     
-    console.log("web3Modal"); 
-    console.log(web3Modal); // Check if the web3Modal object is initialized
-    
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
-    
     web3Modal.connect()
       .then((provider) => {
-        console.log("provider"); 
-        console.log(provider); // Print the provider object
+        web3.eth.setProvider(provider);
 
-        kit.web3.eth.setProvider(provider);
+        const contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);     
 
-        const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);        
-
-        const account = provider.selectedAddress;
-
-        console.log(account);    
-        
+        const account = provider.selectedAddress;        
         const postId = id;
-        console.log(postId);
-        contract.methods.registerLike(postId).send({ from: account, gas: 3000000 });
 
+        contract.methods.registerLike(postId).send({ from: account, gas: 3000000 })
+        .then((receipt) => {
+          console.log(receipt)
+        })
+        .catch((error) => {
+          console.log(error)
+          alert('Você já deu o seu apoio.');
+        });
       })
       .catch((error) => {
-        console.error("error");
-        console.error(error); // Handle any errors
-    }); 
+        console.log("error");
+        console.log(error); // Handle any errors
+    });
   };  
 
   const handleNewComment = async (postId) => {
@@ -111,23 +110,18 @@ export default function Home({ posts }) {
 
   const createComment = async (postId, comment) => {
     const web3Modal = new Web3Modal({
-      network: "celo", // Use the Celo Alfajores testnet
+      network: "mumbai",
       cacheProvider: true,
     });
 
-    const kit = ContractKit.newKit('https://alfajores-forno.celo-testnet.org'); // Use the URL of the Celo Alfajores testnet
-
     web3Modal.connect()
         .then((provider) => {
-            kit.web3.eth.setProvider(provider);
+            web3.eth.setProvider(provider);
 
-            const contract = new kit.web3.eth.Contract(SVForumJSON.abi, contractAddress);
+            const contract = new web3.eth.Contract(SVForumJSON.abi, contractAddress);  
 
             const account = provider.selectedAddress;
 
-            console.log('createComment');
-            console.log(postId);
-            console.log(comment);
             contract.methods.registerComment(postId, comment).send({ from: account, gas: 3000000 });        
         });
   }
